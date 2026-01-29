@@ -1,0 +1,89 @@
+// Prisma Schema for E-commerce Analytics System
+// Database: PostgreSQL (Supabase)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Products from external API
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  category    String
+  price       Decimal  @db.Decimal(10, 2)
+  rating      Decimal? @db.Decimal(3, 2)
+  stock       Int?
+  description String?  @db.Text
+  imageUrl    String?  @map("image_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  syncedAt  DateTime @default(now()) @map("synced_at")
+
+  // Relations
+  orderItems OrderItem[]
+
+  @@index([category])
+  @@map("products")
+}
+
+// Orders from external API
+model Order {
+  id            String   @id @default(uuid())
+  orderDate     DateTime @map("order_date")
+  customerName  String   @map("customer_name")
+  customerEmail String?  @map("customer_email")
+  status        String // pending, completed, cancelled, processing
+  totalAmount   Decimal  @db.Decimal(10, 2) @map("total_amount")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  syncedAt  DateTime @default(now()) @map("synced_at")
+
+  // Relations
+  orderItems OrderItem[]
+
+  @@index([status])
+  @@index([orderDate])
+  @@map("orders")
+}
+
+// Junction table for Order-Product relationship
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String  @map("order_id")
+  productId String  @map("product_id")
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2) // Price at time of order
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+// Optional: Track sync job history
+model SyncLog {
+  id               String    @id @default(uuid())
+  syncType         String    @map("sync_type") // 'products' | 'orders'
+  status           String // 'success' | 'failed' | 'partial'
+  recordsProcessed Int       @map("records_processed")
+  errorMessage     String?   @db.Text @map("error_message")
+  startedAt        DateTime  @map("started_at")
+  completedAt      DateTime? @map("completed_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("sync_logs")
+}
