@@ -15,6 +15,7 @@ A full-stack analytics dashboard that synchronizes e-commerce data from external
 ## Features
 
 ### Data Pipeline (Trigger.dev)
+
 - Scheduled job runs every 1 hour
 - Fetches data from mock e-commerce APIs:
   - Orders: `https://fake-store-api.mock.beeceptor.com/api/orders`
@@ -22,6 +23,7 @@ A full-stack analytics dashboard that synchronizes e-commerce data from external
 - Upserts data to PostgreSQL with proper sync tracking
 
 ### Dashboard Analytics
+
 - **4 Metric Cards**:
   - Total Revenue
   - Total Order Count
@@ -49,10 +51,12 @@ ecommerce-analytics-system/
 ├── src/
 │   ├── app/
 │   │   ├── (dashboard)/
-│   │   │   └── dashboard/     # Main dashboard page
-│   │   ├── api/               # API routes
-│   │   │   ├── analytics/     # Analytics endpoints
-│   │   │   └── sync/          # Manual sync trigger
+│   │   │   └── dashboard/
+│   │   │       └── page.tsx   # Main dashboard (Server Component)
+│   │   ├── api/
+│   │   │   └── sync/
+│   │   │       └── trigger/
+│   │   │           └── route.ts  # Manual sync trigger (optional)
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── components/
@@ -60,13 +64,21 @@ ecommerce-analytics-system/
 │   │   ├── common/            # Reusable common components
 │   │   └── layout/            # Layout components
 │   ├── lib/
-│   │   ├── api/               # API client & queries
-│   │   ├── types/             # TypeScript types
-│   │   └── utils/             # Utility functions
-│   └── jobs/
-│       └── sync-ecommerce-data.ts  # Trigger.dev sync job
+│   │   ├── prisma.ts          # Prisma client singleton
+│   │   ├── db/                # Database query functions
+│   │   │   ├── analytics.ts
+│   │   │   ├── products.ts
+│   │   │   ├── orders.ts
+│   │   │   └── syncLogs.ts
+│   │   ├── api/
+│   │   │   └── ecommerce.ts   # External API client
+│   │   └── types/             # TypeScript types
+│   └── trigger/
+│       └── sync-ecommerce-data.ts  # Trigger.dev background job
+├── trigger.config.ts          # Trigger.dev configuration
 ├── ERD.md                     # Entity Relationship Diagram
 ├── PRD.md                     # Product Requirements Document
+├── ARCHITECTURE.md            # Architecture decisions
 ├── .env.example               # Environment variables template
 └── package.json
 ```
@@ -82,32 +94,38 @@ ecommerce-analytics-system/
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <your-repo-url>
 cd ecommerce-analytics-system
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables:
+
 ```bash
 cp .env.example .env.local
 ```
 
 Fill in the required environment variables:
+
 - `DATABASE_URL`: Your Supabase PostgreSQL connection string
 - `TRIGGER_API_KEY`: Your Trigger.dev API key
 - `TRIGGER_API_URL`: Trigger.dev API URL
 
 4. Set up the database:
+
 ```bash
 npm run prisma:push
 ```
 
 5. Generate Prisma Client:
+
 ```bash
 npm run prisma:generate
 ```
@@ -115,6 +133,7 @@ npm run prisma:generate
 ### Development
 
 Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -127,6 +146,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the dashboard.
 2. Create a new project
 3. Copy your API key and add it to `.env.local`
 4. Deploy your Trigger.dev job:
+
 ```bash
 npx trigger.dev@latest dev
 ```
@@ -134,11 +154,13 @@ npx trigger.dev@latest dev
 ### Database Management
 
 View your database with Prisma Studio:
+
 ```bash
 npm run prisma:studio
 ```
 
 Create a new migration:
+
 ```bash
 npm run prisma:migrate
 ```
@@ -167,20 +189,25 @@ See [ERD.md](./ERD.md) for detailed entity relationship diagram and schema docum
 
 See [PRD.md](./PRD.md) for detailed product requirements and implementation phases.
 
-## API Endpoints
+## Architecture: Server Components (No API Layer!)
 
-### Analytics
+This project uses **Next.js Server Components** for data fetching, which means:
 
-- `GET /api/analytics/metrics` - Get all metrics (revenue, orders, etc.)
-- `GET /api/analytics/orders-by-status` - Orders grouped by status
-- `GET /api/analytics/products-by-category` - Products grouped by category
-- `GET /api/analytics/recent-orders` - Latest 5 orders
-- `GET /api/analytics/top-products` - Top 5 highest priced products
-- `GET /api/analytics/custom-insight` - Revenue by category
+**✅ Dashboard queries database directly:**
 
-### Sync
+```typescript
+// app/(dashboard)/dashboard/page.tsx
+import { getAllDashboardData } from '@/lib/db/analytics'
 
-- `POST /api/sync/trigger` - Manually trigger data sync
+export default async function DashboardPage() {
+  const data = await getAllDashboardData() // Direct Prisma query!
+  return <Dashboard data={data} />
+}
+```
+
+**✅ Only API endpoint available (optional):**
+
+- `POST /api/sync/trigger` - Manually trigger data sync job
 
 ## Key Features & Design Decisions
 
@@ -194,6 +221,7 @@ See [PRD.md](./PRD.md) for detailed product requirements and implementation phas
 ## Testing the Sync Job
 
 To manually trigger a sync:
+
 ```bash
 curl -X POST http://localhost:3000/api/sync/trigger
 ```
@@ -201,19 +229,22 @@ curl -X POST http://localhost:3000/api/sync/trigger
 ## Troubleshooting
 
 ### Database Connection Issues
+
 - Verify your `DATABASE_URL` is correct
 - Ensure Supabase database is accessible
 - Check if Prisma Client is generated
 
 ### Trigger.dev Job Not Running
+
 - Verify your `TRIGGER_API_KEY` is correct
 - Check Trigger.dev dashboard for job status
 - Ensure you've deployed the job with `npx trigger.dev@latest dev`
 
 ### Charts Not Rendering
+
 - Check browser console for errors
-- Verify data is being fetched from API endpoints
-- Ensure Recharts is properly installed
+- Verify data is being fetched from database (check Server Component logs)
+- Ensure Recharts is properly installed and components are marked 'use client'
 
 ## Contributing
 
