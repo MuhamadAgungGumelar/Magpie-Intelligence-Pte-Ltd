@@ -4,7 +4,7 @@
 import { defineConfig } from '@trigger.dev/sdk/v3'
 
 export default defineConfig({
-  project: process.env.TRIGGER_PROJECT_ID || 'your-project-id',
+  project: process.env.TRIGGER_PROJECT_ID || 'proj_thamrdhirlwxzrzexewy',
   runtime: 'node',
   logLevel: 'info',
   maxDuration: 300, // 5 minutes max for sync jobs
