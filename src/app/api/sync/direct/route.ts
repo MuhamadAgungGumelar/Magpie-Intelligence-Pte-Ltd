@@ -8,7 +8,7 @@ import { upsertProducts } from '@/lib/db/products'
 import { upsertOrders } from '@/lib/db/orders'
 import { createSyncLog } from '@/lib/db/syncLogs'
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   const startTime = new Date()
   let productsCount = 0
   let ordersCount = 0
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       syncType: 'all',
       status: 'success',
       recordsProcessed: productsCount + ordersCount,
-      errorMessage: null,
+      errorMessage: undefined,
       startedAt: startTime,
       completedAt: endTime,
     })
