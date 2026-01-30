@@ -5,6 +5,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { tasks } from '@trigger.dev/sdk/v3'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(request: NextRequest) {
   try {
     // Trigger the sync job manually
@@ -33,6 +34,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Optional: GET endpoint to check sync status
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: NextRequest) {
   try {
     // You can add logic here to check the status of the last sync

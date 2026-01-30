@@ -8,7 +8,8 @@ import { upsertProducts } from '@/lib/db/products'
 import { upsertOrders } from '@/lib/db/orders'
 import { createSyncLog } from '@/lib/db/syncLogs'
 
-export async function POST(_request: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function POST(request: NextRequest) {
   const startTime = new Date()
   let productsCount = 0
   let ordersCount = 0
@@ -92,6 +93,7 @@ export async function POST(_request: NextRequest) {
 }
 
 // GET endpoint for status check
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: NextRequest) {
   return NextResponse.json(
     {

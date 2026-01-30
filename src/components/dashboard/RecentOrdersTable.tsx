@@ -5,6 +5,7 @@ interface RecentOrdersTableProps {
   orders: Order[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const statusConfig: Record<string, { icon: any; color: string; label: string }> = {
   pending: { icon: FiClock, color: 'text-yellow-600 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-900/30', label: 'Pending' },
   processing: { icon: FiPackage, color: 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30', label: 'Processing' },

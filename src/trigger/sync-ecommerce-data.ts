@@ -10,6 +10,7 @@ import { createSyncLog } from '@/lib/db/syncLogs'
 export const syncEcommerceData = task({
   id: 'sync-ecommerce-data',
   // Run every 1 hour
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   run: async (payload, { ctx }) => {
     const startTime = new Date()
     let productsCount = 0

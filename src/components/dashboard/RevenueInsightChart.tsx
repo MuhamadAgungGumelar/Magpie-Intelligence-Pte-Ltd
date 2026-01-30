@@ -42,6 +42,7 @@ export default function RevenueInsightChart({ data }: RevenueInsightChartProps) 
               borderRadius: '8px',
               boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
             }}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             formatter={(value: any, name?: string) => {
               const numValue = Number(value) || 0;
               if (name === 'revenue') {
