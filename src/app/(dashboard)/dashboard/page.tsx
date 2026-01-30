@@ -1,6 +1,9 @@
 // Dashboard Page - Server Component
 // Fetches all data directly from database via Prisma
 
+// Force dynamic rendering (don't pre-render during build)
+export const dynamic = 'force-dynamic'
+
 import { Suspense } from 'react'
 import { getAllDashboardData, getLastSyncInfo } from '@/lib/db/analytics'
 import MetricCards from '@/components/dashboard/MetricCards'
