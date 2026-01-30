@@ -134,11 +134,12 @@ export async function getTopProducts() {
 export async function getRevenueByCategory() {
   // Raw SQL query for better performance
   const result = await prisma.$queryRaw<
-    Array<{ category: string; revenue: number }>
+    Array<{ category: string; revenue: number; orderCount: bigint }>
   >`
     SELECT
       p.category,
-      SUM(oi.price * oi.quantity) as revenue
+      SUM(oi.price * oi.quantity) as revenue,
+      COUNT(DISTINCT o.id) as "orderCount"
     FROM order_items oi
     INNER JOIN products p ON oi.product_id = p.id
     INNER JOIN orders o ON oi.order_id = o.id
@@ -150,6 +151,7 @@ export async function getRevenueByCategory() {
   return result.map((item) => ({
     category: item.category,
     revenue: Number(item.revenue),
+    orderCount: Number(item.orderCount),
   }))
 }
 
