@@ -4,12 +4,14 @@
 import { Prisma } from '@prisma/client'
 
 // Product types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type Product = Prisma.ProductGetPayload<{}>
 export type ProductWithOrderItems = Prisma.ProductGetPayload<{
   include: { orderItems: true }
 }>
 
 // Order types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type Order = Prisma.OrderGetPayload<{}>
 export type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -22,12 +24,14 @@ export type OrderWithItems = Prisma.OrderGetPayload<{
 }>
 
 // OrderItem types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type OrderItem = Prisma.OrderItemGetPayload<{}>
 export type OrderItemWithProduct = Prisma.OrderItemGetPayload<{
   include: { product: true }
 }>
 
 // SyncLog types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type SyncLog = Prisma.SyncLogGetPayload<{}>
 
 // Analytics types
