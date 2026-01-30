@@ -1,12 +1,12 @@
 // Trigger.dev Configuration
 // https://trigger.dev/docs
 
-import { defineConfig } from '@trigger.dev/sdk/v3'
+import { defineConfig } from "@trigger.dev/sdk";
 
 export default defineConfig({
-  project: process.env.TRIGGER_PROJECT_ID || 'proj_thamrdhirlwxzrzexewy',
-  runtime: 'node',
-  logLevel: 'info',
+  project: process.env.TRIGGER_PROJECT_ID || "proj_thamrdhirlwxzrzexewy",
+  runtime: "node",
+  logLevel: "info",
   maxDuration: 300, // 5 minutes max for sync jobs
   retries: {
     enabledInDev: true,
@@ -18,5 +18,5 @@ export default defineConfig({
       randomize: true,
     },
   },
-  dirs: ['./src/trigger'],
-})
+  dirs: ["./src/trigger"],
+});
