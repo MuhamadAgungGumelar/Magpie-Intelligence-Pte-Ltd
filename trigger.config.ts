@@ -7,6 +7,7 @@ export default defineConfig({
   project: process.env.TRIGGER_PROJECT_ID || 'your-project-id',
   runtime: 'node',
   logLevel: 'info',
+  maxDuration: 300, // 5 minutes max for sync jobs
   retries: {
     enabledInDev: true,
     default: {
