@@ -53,30 +53,29 @@ export type RevenueByCategory = {
   revenue: number
 }
 
-// External API response types (from fake-store-api)
+// External API response types (from fake-store-api.mock.beeceptor.com)
 export type ExternalProduct = {
-  id: string
+  product_id: number
   name: string
   category: string
   price: number
   rating?: number
-  stock?: number
+  availability?: boolean
   description?: string
   image?: string
+  brand?: string
+  discount?: number
 }
 
 export type ExternalOrderItem = {
-  product_id: string
+  product_id: number
   quantity: number
-  price: number
 }
 
 export type ExternalOrder = {
-  id: string
-  order_date: string
-  customer_name: string
-  customer_email?: string
+  order_id: number
+  user_id: number
   status: string
-  total_amount: number
+  total_price: number
   items: ExternalOrderItem[]
 }
